@@ -95,6 +95,7 @@ site/
 target/
 
 # AI Agents
+AGENTS.md
 *.local.md
 .cursor/
 .codex/
