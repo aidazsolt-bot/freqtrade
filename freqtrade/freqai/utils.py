@@ -37,8 +37,8 @@ def download_all_data_for_training(dp: DataProvider, config: Config) -> None:
     # Fall back to expanding config["pairs"] when no pairlist manager is attached.
     if dp._pairlists is not None:
         all_pairs = list(dp.current_whitelist())
-        corr_pairlist = config.get("freqai", {}).get("feature_parameters", {}).get(
-            "include_corr_pairlist", []
+        corr_pairlist = (
+            config.get("freqai", {}).get("feature_parameters", {}).get("include_corr_pairlist", [])
         )
         all_pairs += [pair for pair in corr_pairlist if pair not in all_pairs]
     else:

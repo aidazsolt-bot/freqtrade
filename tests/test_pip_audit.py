@@ -40,6 +40,9 @@ def test_pip_audit_no_vulnerabilities():
         "--ignore-vuln",
         "CVE-2026-4539",
         "--skip-editable",
+        # Audit the project dependency set, not every package in a fat local
+        # develop venv (plot/dev/ethereum extras pull many unrelated CVEs).
+        str(project_root),
     ]
 
     # Run pip-audit with JSON output for easier parsing

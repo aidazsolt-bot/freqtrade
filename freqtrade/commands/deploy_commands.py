@@ -35,8 +35,6 @@ def deploy_new_strategy(strategy_name: str, strategy_path: Path, subtemplate: st
     """
     Deploy new strategy from template to strategy_path
     """
-    from freqtrade.util import render_template, render_template_with_fallback
-
     if subtemplate.endswith("-ai"):
         strategy_text = _render_freqai_strategy(strategy_name, subtemplate)
     else:

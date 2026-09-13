@@ -21,6 +21,13 @@ def console_width() -> int | None:
 def get_rich_console(**kwargs) -> Console:
     """
     Get a rich console with default settings
+
+    Rich 15+ treats dumb/non-TTY terminals as 80 columns unless both width and
+    height are set; width-only is ignored. Always pair an explicit width with a
+    height so pytest and redirected output keep a usable table width.
     """
-    kwargs["width"] = kwargs.get("width", console_width())
+    width = kwargs.get("width", console_width())
+    kwargs["width"] = width
+    if width is not None:
+        kwargs.setdefault("height", 25)
     return Console(**kwargs)

@@ -320,8 +320,14 @@ def test_list_timeframes(mocker, capsys):
         }
     }
 
+    # Use a hermetic config so a local user_data/config.json (e.g. futures)
+    # cannot change the default trading mode for this assertion.
+    spot_config = "tests/testdata/testconfigs/main_test_config.json"
+
     args = [
         "list-timeframes",
+        "--config",
+        spot_config,
         "--exchange",
         "binance",
     ]
@@ -334,6 +340,8 @@ def test_list_timeframes(mocker, capsys):
 
     args = [
         "list-timeframes",
+        "--config",
+        spot_config,
         "--exchange",
         "binance",
         "--trading-mode",
@@ -347,6 +355,8 @@ def test_list_timeframes(mocker, capsys):
     )
     args = [
         "list-timeframes",
+        "--config",
+        spot_config,
         "--exchange",
         "binance",
         "--trading-mode",

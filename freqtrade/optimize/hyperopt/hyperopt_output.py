@@ -39,9 +39,12 @@ class HyperoptOutput:
 
     def print(self, console: Console | None = None, *, print_colorized=True):
         if not console:
+            # Rich 15+: width alone is ignored on dumb terminals; set height too.
+            width = 200 if "pytest" in sys.modules else None
             console = Console(
                 color_system="auto" if print_colorized else None,
-                width=200 if "pytest" in sys.modules else None,
+                width=width,
+                height=25 if width is not None else None,
             )
 
         console.print(self.table)
