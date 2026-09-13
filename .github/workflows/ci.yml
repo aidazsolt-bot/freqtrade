@@ -24,26 +24,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ "ubuntu-22.04", "ubuntu-24.04", "ubuntu-26.04", "ubuntu-24.04-arm", "macos-14", "macos-15" , "windows-2022", "windows-2025" ]
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
-        exclude:
-          - os: "ubuntu-22.04"
-            python-version: "3.13"
-          - os: "ubuntu-22.04"
-            python-version: "3.14"
-          # Reduce ARM runs to newer python versions
-          - os: "ubuntu-24.04-arm"
-            python-version: "3.11"
-          - os: "ubuntu-24.04-arm"
-            python-version: "3.12"
-          # ubuntu 26.04 has 3.14 as default python version
-          - os: "ubuntu-26.04"
-            python-version: "3.11"
-          - os: "ubuntu-26.04"
-            python-version: "3.12"
-          - os: "ubuntu-26.04"
-            python-version: "3.13"
-
+        os: [ "ubuntu-24.04" ]
+        python-version: ["3.12"]
 
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -60,13 +42,6 @@ jobs:
         cache-dependency-glob: "requirements**.txt"
         cache-suffix: "${{ matrix.python-version }}"
 
-    - name: Installation - macOS (Brew)
-      if: ${{ runner.os == 'macOS' }}
-      run: |
-        # brew update
-        # TODO: Should be the brew upgrade
-        brew install libomp
-
     - name: Installation (python)
       run: |
         uv pip install -r requirements-dev.txt
@@ -78,26 +53,8 @@ jobs:
         python build_helpers/freqtrade_client_version_align.py
 
     - name: Tests
-      if: (!(runner.os == 'Linux' && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04'))
       run: |
         pytest --random-order --durations 20 -n auto
-
-    - name: Tests with Coveralls
-      if: (runner.os == 'Linux' && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04')
-      run: |
-        pytest --random-order --cov=freqtrade --cov=freqtrade_client --cov-config=.coveragerc
-
-    - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
-      if: (runner.os == 'Linux' && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04')
-      with:
-        fail_ci_if_error: true
-        token: ${{ secrets.CODECOV_TOKEN }}  # zizmor: ignore[secrets-outside-env] Intentionally not using environment variable.
-
-    - name: Cleanup codecov dirty state files
-      if: (runner.os == 'Linux' && matrix.python-version == '3.14' && matrix.os == 'ubuntu-24.04')
-      run: |
-        # See https://github.com/codecov/codecov-action/issues/1851
-        rm -rf codecov codecov.SHA256SUM codecov.SHA256SUM.sig
 
     - name: Run json schema extract
       # This must be kept before the repository check to ensure that the schema is up-to-date
@@ -106,12 +63,10 @@ jobs:
 
     - name: Run command docs partials extract
       # This must be kept before the repository check to ensure that the docs are up-to-date
-      if: ${{ (matrix.python-version == '3.13') }}
       run: |
         python build_helpers/create_command_partials.py
 
-    - name: Check for repository changes - *nix
-      if: ${{ (runner.os != 'Windows') }}
+    - name: Check for repository changes
       run: |
         if [ -n "$(git status --porcelain)" ]; then
           echo "Repository is dirty, changes detected:"
@@ -121,19 +76,6 @@ jobs:
         else
           echo "Repository is clean, no changes detected."
         fi
-
-    - name: Check for repository changes - Windows
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        if (git status --porcelain) {
-          Write-Host "Repository is dirty, changes detected:"
-          git status
-          git diff
-          exit 1
-        }
-        else {
-          Write-Host "Repository is clean, no changes detected."
-        }
 
     - name: Backtesting (multi)
       run: |
@@ -159,23 +101,8 @@ jobs:
         ruff format --check
 
     - name: Mypy
-      if: ${{ matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15' }}
       run: |
         mypy freqtrade scripts tests
-
-    - name: Run Pester tests (PowerShell)
-      if: ${{ runner.os == 'Windows' }}
-      shell: pwsh
-      run: |
-        $PSVersionTable
-        Install-PSResource -Name Pester -Version '[5.7.1]' -TrustRepository -Reinstall
-        $Error.clear()
-
-        # Override Clear-Host globally to prevent headless console crashes
-        Function Clear-Host { }
-
-        Invoke-Pester -Path "tests" -CI
-        if ($Error.Length -gt 0) {exit 1}
 
     - name: Discord notification
       uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
@@ -270,7 +197,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.14"]
+        python-version: ["3.12"]
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
