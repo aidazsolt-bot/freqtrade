@@ -233,7 +233,8 @@ class IFreqaiModel(ABC):
             time.sleep(1)
 
             # Keep queue aligned with live pairlist (VolumePairList / regex filters).
-            self._reconcile_train_queue(strategy.dp.current_whitelist())
+            whitelist = self._train_pairlist()
+            self._reconcile_train_queue(whitelist)
 
             if not self.train_queue:
                 continue
@@ -241,7 +242,7 @@ class IFreqaiModel(ABC):
             pair = self.train_queue[0]
 
             # ensure pair is available in dp
-            if pair not in strategy.dp.current_whitelist():
+            if pair not in whitelist:
                 self.train_queue.popleft()
                 logger.warning(f"{pair} not in current whitelist, removing from train queue.")
                 continue
@@ -808,11 +809,13 @@ class IFreqaiModel(ABC):
         Pairs FreqAI should train/infer on.
 
         Prefer the DataProvider whitelist (result after StaticPairList / VolumePairList /
-        regex expansion and filters). Fall back to the raw config whitelist only when no
-        DataProvider is attached yet (early construction / some unit tests).
+        regex expansion and filters). Fall back to the raw config whitelist when no
+        DataProvider is attached yet, or when tests attach a DataProvider without a
+        PairListManager (``current_whitelist()`` would raise).
         """
-        if self.data_provider is not None:
-            return self.data_provider.current_whitelist()
+        dp = self.data_provider
+        if dp is not None and getattr(dp, "_pairlists", None) is not None:
+            return dp.current_whitelist()
         return list(self.config.get("exchange", {}).get("pair_whitelist") or [])
 
     def ensure_pairlist(self, dp: DataProvider) -> None:
@@ -845,10 +848,11 @@ class IFreqaiModel(ABC):
         otherwise it sets the train queue based on the resolved whitelist.
         """
         current_pairlist = self._train_pairlist()
-        # Distinguish log wording: constructor often runs before ensure_pairlist(), so the
-        # first line may still show config regexes; the following ensure_pairlist() rebuild
-        # logs the real expanded pairs. Both lines are intentional (not an error).
-        if self.data_provider is not None:
+        # Distinguish log wording: constructor / tests often run before a PairListManager
+        # is attached, so the first line may still show config regexes; once
+        # ensure_pairlist() runs with a real pairlist, the queue is rebuilt.
+        dp = self.data_provider
+        if dp is not None and getattr(dp, "_pairlists", None) is not None:
             source = "resolved pairlist"
         else:
             source = "config whitelist (DataProvider not attached yet; may include regex)"
