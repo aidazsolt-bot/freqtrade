@@ -21,7 +21,7 @@ This will spin up a local server (usually on port 8000) so you can see if everyt
 
 ## Developer setup
 
-To configure a development environment, you can either use the provided [DevContainer](#devcontainer-setup), or use the `setup.sh` script and answer "y" when asked "Do you want to install dependencies for dev [y/N]? ".
+To configure a development environment, use the `setup.sh` script and answer "y" when asked "Do you want to install dependencies for dev [y/N]? ".
 Alternatively (e.g. if your system is not supported by the setup.sh script), follow the manual installation process and run `pip3 install -r requirements-dev.txt` - followed by `pip3 install -e .[all]`.
 
 This will install all required tools for development, including `pytest`, `ruff`, `mypy`, and `coveralls`.
@@ -39,19 +39,6 @@ This reduces unnecessary CI failures, reduces maintenance burden, and improves c
 You can run the checks manually when necessary with `pre-commit run -a`.  
 
 Before opening a pull request, please also familiarize yourself with our [Contributing Guidelines](https://github.com/freqtrade/freqtrade/blob/develop/CONTRIBUTING.md).
-
-### Devcontainer setup
-
-The fastest and easiest way to get started is to use [VSCode](https://code.visualstudio.com/) with the Remote container extension.
-This gives developers the ability to start the bot with all required dependencies *without* needing to install any freqtrade specific dependencies on your local machine.
-
-#### Devcontainer dependencies
-
-* [VSCode](https://code.visualstudio.com/)
-* [docker](https://docs.docker.com/install/)
-* [Remote container extension documentation](https://code.visualstudio.com/docs/remote)
-
-For more information about the [Remote container extension](https://code.visualstudio.com/docs/remote), best consult the documentation.
 
 ### Tests
 
@@ -436,7 +423,7 @@ freqtrade backtesting --config tests/testdata/config.tests.usdt.json -s SampleSt
 
 This documents some decisions taken for the CI Pipeline.
 
-* CI runs on all OS variants, Linux (ubuntu), macOS and Windows.
+* CI runs on Linux (ubuntu).
 * Docker images are build for the branches `stable` and `develop`, and are built as multiarch builds, supporting multiple platforms via the same tag.
 * Docker images containing Plot dependencies are also available as `stable_plot` and `develop_plot`.
 * Docker images contain a file, `/freqtrade/freqtrade_commit` containing the commit this image is based of.

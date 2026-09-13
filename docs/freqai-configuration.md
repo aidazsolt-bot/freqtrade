@@ -252,13 +252,8 @@ The easiest way to quickly run a pytorch model is with the following command (fo
 freqtrade trade --config config_examples/config_freqai.example.json --strategy FreqaiExampleStrategy --freqaimodel PyTorchMLPRegressor --strategy-path freqtrade/templates 
 ```
 
-!!! Note "Installation/docker"
+!!! Note "Installation"
     The PyTorch module requires large packages such as `torch`, which should be explicitly requested during `./setup.sh -i` by answering "y" to the question "Do you also want dependencies for freqai-rl or PyTorch (~700mb additional space required) [y/N]?".
-    Users who prefer docker should ensure they use the docker image appended with `_freqaitorch`.
-    We do provide an explicit docker-compose file for this in `docker/docker-compose-freqai.yml` - which can be used via `docker compose -f docker/docker-compose-freqai.yml run ...` - or can be copied to replace the original docker file.
-    This docker-compose file also contains a (disabled) section to enable GPU resources within docker containers. This obviously assumes the system has GPU resources available.
-
-    PyTorch dropped support for macOS x64 (intel based Apple devices) in version 2.3. Subsequently, freqtrade also dropped support for PyTorch on this platform.
 
 !!! Danger "Security notice"
     Loading saved models from disk can cause security issues if using remote model files (files you downloaded from the internet or received from an untrusted source) due to having the necessity to have `weights_only=False`, which can cause security problems.

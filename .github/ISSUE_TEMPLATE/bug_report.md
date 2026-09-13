@@ -27,7 +27,7 @@ Please do not use the bug report template to request new features.
   * Operating system: ____
   * Python Version: _____ (`python -V`)
   * CCXT version: _____ (`pip freeze | grep ccxt`)
-  * Freqtrade Version: ____ (`freqtrade -V` or `docker compose run --rm freqtrade -V` for Freqtrade running in docker)
+  * Freqtrade Version: ____ (`freqtrade -V`)
   
 Note: All issues other than enhancement requests will be closed without further comment if the above template is deleted or not filled out.
 

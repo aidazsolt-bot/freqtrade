@@ -20,15 +20,6 @@ Feel free to use a visual Database editor like SqliteBrowser if you feel more co
 sudo apt-get install sqlite3
 ```
 
-### Using sqlite3 via docker
-
-The freqtrade docker image does contain sqlite3, so you can edit the database without having to install anything on the host system.
-
-``` bash
-docker compose exec freqtrade /bin/bash
-sqlite3 <database-file>.sqlite
-```
-
 ## Open the DB
 
 ```bash

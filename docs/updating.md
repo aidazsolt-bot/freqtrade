@@ -12,16 +12,6 @@ Keeping your bot updated not only ensures that you have the latest features and 
 Freqtrade is heavily dependent on the underlying exchange API's, which change pretty frequently if considered across exchanges.
 To ensure ongoing compatibility, please make sure to update your bot regularly.
 
-## Docker
-
-!!! Note "Legacy installations using the `master` image"
-    We're switching from master to stable for the release Images - please adjust your docker-file and replace `freqtradeorg/freqtrade:master` with `freqtradeorg/freqtrade:stable`
-
-``` bash
-docker compose pull
-docker compose up -d
-```
-
 ## Installation via setup script
 
 ``` bash
@@ -52,4 +42,3 @@ We try to make sure that heavy dependencies have wheels available for major plat
 Please refer to the corresponding installation sections (common problem sections linked below).
 
 [Common installation problems](installation.md#troubleshooting)
-[Common installation problems - windows](installation.md#windows-installation-error)

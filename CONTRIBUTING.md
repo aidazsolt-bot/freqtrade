@@ -122,7 +122,7 @@ Exceptions:
 
 ### Responsibilities
 
-- Ensure cross-platform compatibility for every change that's accepted. Windows, Mac & Linux.
+- Ensure Linux compatibility for every change that's accepted.
 - Ensure no malicious code is introduced into the core code.
 - Create issues for any major changes and enhancements that you wish to make. Discuss things transparently and get community feedback.
 - Keep feature PR's as small as possible, preferably one new feature per PR.

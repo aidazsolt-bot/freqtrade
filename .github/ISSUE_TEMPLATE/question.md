@@ -25,7 +25,7 @@ Please consult the documentation. We'll close such issues and point to the docum
   * Operating system: ____
   * Python Version: _____ (`python -V`)
   * CCXT version: _____ (`pip freeze | grep ccxt`)
-  * Freqtrade Version: ____ (`freqtrade -V` or `docker compose run --rm freqtrade -V` for Freqtrade running in docker)
+  * Freqtrade Version: ____ (`freqtrade -V`)
   
 ## Your question
 

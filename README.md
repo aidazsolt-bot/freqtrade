@@ -70,7 +70,7 @@ Please find the complete documentation on the [freqtrade website](https://www.fr
 
 ## Features
 
-- [x] **Based on Python 3.11+**: For botting on any operating system - Windows, macOS and Linux.
+- [x] **Based on Python 3.11+**: For botting on Linux.
 - [x] **Persistence**: Persistence is achieved through sqlite.
 - [x] **Dry-run**: Run the bot without paying money.
 - [x] **Backtesting**: Run a simulation of your buy/sell strategy.
@@ -85,9 +85,7 @@ Please find the complete documentation on the [freqtrade website](https://www.fr
 
 ## Quick start
 
-Please refer to the [Docker Quickstart documentation](https://www.freqtrade.io/en/stable/docker_quickstart/) on how to get started quickly.
-
-For further (native) installation methods, please refer to the [Installation documentation page](https://www.freqtrade.io/en/stable/installation/).
+Please refer to the [Installation documentation page](https://www.freqtrade.io/en/stable/installation/).
 
 ## Basic Usage
 
@@ -233,4 +231,3 @@ To run this bot we recommend you a cloud instance with a minimum of:
 - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [TA-Lib](https://ta-lib.github.io/ta-lib-python/)
 - [virtualenv](https://virtualenv.pypa.io/en/stable/installation.html) (Recommended)
-- [Docker](https://www.docker.com/products/docker) (Recommended)

@@ -4,30 +4,19 @@ This page explains how to prepare your environment for running the bot.
 
 The freqtrade documentation describes various ways to install freqtrade
 
-* [Docker images](docker_quickstart.md) (separate page)
 * [Script Installation](#script-installation)
 * [Manual Installation](#manual-installation)
 * [Installation with Conda](#installation-with-conda)
-
-Please consider using the prebuilt [docker images](docker_quickstart.md) to get started quickly.
 
 !!! Note "Updating"
     Keeping freqtrade updated is important to [ensure ongoing compatibility](updating.md#why-update) with exchange API's.
     Please refer to the [updating guide](updating.md) for details on how to update your installation.
 
-!!! Note "Windows users"
-    We **strongly** recommend that Windows users use [Docker](docker_quickstart.md) as this will work much easier and smoother (also more secure).
-
-    If that is not possible, try using the Windows Linux subsystem (WSL) - for which the Ubuntu/Linux instructions will work.
-    If you really want to install freqtrade natively on Windows, best use the [`./setup.ps1` installation script](#use-setupps1-windows).
-
-    Please also make sure to use the 64bit version of Python, as 32bit versions have severe memory limitations, which can negatively impact your experience with backtesting/hyperopt.
-
 ------
 
 ## Information
 
-The easiest way to install and run Freqtrade is to clone the bot Github repository and then run the `./setup.sh` (`./setup.ps1` for Windows) script, if it's available for your platform.
+The easiest way to install and run Freqtrade is to clone the bot Github repository and then run the `./setup.sh` script, if it's available for your platform.
 
 !!! Note "Version considerations"
     When cloning the repository the default working branch has the name `develop`. This branch contains all last features (can be considered as relatively stable, thanks to automated tests).
@@ -47,8 +36,7 @@ The easiest way to install and run Freqtrade is to clone the bot Github reposito
 These requirements apply to both [Script Installation](#script-installation) and [Manual Installation](#manual-installation).
 
 !!! Note "ARM64 systems"
-    If you are running an ARM64 system (like a MacOS M1 or an Oracle VM), please use [docker](docker_quickstart.md) to run freqtrade.
-    While native installation is possible with some manual effort, this is not supported at the moment.
+    Native installation on ARM64 cloud VMs may require extra manual effort and is not fully supported at the moment.
 
 ### Install guide
 
@@ -59,7 +47,7 @@ These requirements apply to both [Script Installation](#script-installation) and
 
 ### Install code
 
-We've included/collected install instructions for Ubuntu, MacOS, and Windows. These are guidelines and your success may vary with other distros.
+We've included/collected install instructions for Ubuntu/Debian and related Linux distros. These are guidelines and your success may vary with other distros.
 OS Specific steps are listed first, the common section below is necessary for all systems.
 
 !!! Note
@@ -75,18 +63,6 @@ OS Specific steps are listed first, the common section below is necessary for al
     # install packages
     sudo apt install -y python3-pip python3-venv python3-dev python3-pandas git curl
     ```
-
-=== "MacOS"
-    #### Install necessary dependencies
-
-    Install [Homebrew](https://brew.sh/) if you don't have it already.
-
-    ```bash
-    # install packages
-    brew install gettext libomp
-    ```
-    !!! Note
-        The `setup.sh` script will install these dependencies for you - assuming brew is installed on your system.
 
 === "RaspberryPi/Raspbian"
     The following assumes the latest [Raspbian Buster lite image](https://www.raspberrypi.org/downloads/raspbian/).
@@ -108,7 +84,6 @@ OS Specific steps are listed first, the common section below is necessary for al
 
     !!! Note "Installation duration"
         Depending on your internet speed and the Raspberry Pi version, installation can take multiple hours to complete.
-        Due to this, we recommend to use the pre-build docker-image for Raspberry, by following the [Docker quickstart documentation](docker_quickstart.md)
 
     !!! Note
         The above does not install hyperopt dependencies. To install these, please use `python3 -m pip install -e .[hyperopt]`.
@@ -149,13 +124,13 @@ You may later switch between branches at any time with the `git checkout stable`
 
 ## Script Installation
 
-First of the ways to install Freqtrade, is to use provided the Linux/MacOS `./setup.sh` script, which install all dependencies and help you configure the bot.
+First of the ways to install Freqtrade, is to use the provided Linux `./setup.sh` script, which install all dependencies and help you configure the bot.
 
 Make sure you fulfill the [Requirements](#requirements) and have downloaded the [Freqtrade repository](#freqtrade-repository).
 
-### Use /setup.sh -install (Linux/MacOS)
+### Use /setup.sh -install (Linux)
 
-If you are on Debian, Ubuntu or MacOS, freqtrade provides the script to install freqtrade.
+If you are on Debian or Ubuntu, freqtrade provides the script to install freqtrade.
 
 ```bash
 # --install, Install freqtrade from scratch
@@ -202,25 +177,6 @@ Each time you open a new terminal, you must run `source .venv/bin/activate` to a
 source ./.venv/bin/activate
 ```
 
-### Use ./setup.ps1 (Windows)
-
-The script will ask you a few questions to determine which parts should be installed.
-
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy Bypass
-cd freqtrade
-. .\setup.ps1
-```
-
-#### Activate your virtual environment (Windows)
-
-```powershell
-# activate virtual environment
-. .\.venv\Scripts\Activate.ps1
-```
-
-[You are now ready](#you-are-ready) to run the bot.
-
 -----
 
 ## Manual Installation
@@ -253,7 +209,7 @@ python3 -m pip install -e .
 ### (Optional) Post-installation Tasks
 
 !!! Note 
-    If you run the bot on a server, you should consider using [Docker](docker_quickstart.md) or a terminal multiplexer like `screen` or [`tmux`](https://en.wikipedia.org/wiki/Tmux) to avoid that the bot is stopped on logout.
+    If you run the bot on a server, you should consider using a terminal multiplexer like `screen` or [`tmux`](https://en.wikipedia.org/wiki/Tmux) to avoid that the bot is stopped on logout.
 
 On Linux with software suite `systemd`, as an optional post-installation task, you may wish to setup the bot to run as a `systemd service` or configure it to send the log messages to the `syslog`/`rsyslog` or `journald` daemons. See [Advanced Logging](advanced-setup.md#advanced-logging) for details.
 
@@ -272,8 +228,6 @@ Conda is a package, dependency and environment manager for multiple programming 
 #### Install Conda
 
 [Installing on linux](https://conda.io/projects/conda/en/latest/user-guide/install/linux.html#install-linux-silent)
-
-[Installing on windows](https://conda.io/projects/conda/en/latest/user-guide/install/windows.html)
 
 Answer all questions. After installation, it is mandatory to turn your terminal OFF and ON again.
 
@@ -408,28 +362,3 @@ bash: freqtrade: command not found
 # then activate your virtual environment
 source ./.venv/bin/activate
 ```
-
-### MacOS installation error
-
-Newer versions of MacOS may have installation failed with errors like `error: command 'g++' failed with exit status 1`.
-
-This error will require explicit installation of the SDK Headers, which are not installed by default in this version of MacOS.
-For MacOS 10.14, this can be accomplished with the below command.
-
-```bash
-open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
-```
-
-If this file is inexistent, then you're probably on a different version of MacOS, so you may need to consult the internet for specific resolution details.
-
-### Windows Installation error
-
-```bash
-error: Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": http://landinghub.visualstudio.com/visual-cpp-build-tools
-```
-
-Unfortunately, many packages requiring compilation don't provide a pre-built wheel. It is therefore mandatory to have a C/C++ compiler installed and available for your python environment to use.
-
-You can download the Visual C++ build tools from [the Visual Studio website](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and install "Desktop development with C++" in it's default configuration. Unfortunately, this is a heavy download / dependency so you might want to consider WSL2 or [docker compose](docker_quickstart.md) first.
-
-![Windows installation](assets/windows_install.png)

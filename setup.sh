@@ -129,20 +129,6 @@ function updateenv() {
     fi
 }
 
-# Install bot MacOS
-function install_macos() {
-    if [ ! -x "$(command -v brew)" ]
-    then
-        echo_block "Installing Brew"
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    fi
-
-    brew install gettext libomp
-
-    #Gets number after decimal in python version
-    version=$(egrep -o 3.\[0-9\]+ <<< $PYTHON | sed 's/3.//g')
-}
-
 # Install bot Debian_ubuntu
 function install_debian() {
     sudo apt-get update
@@ -243,10 +229,7 @@ function install() {
 
     echo_block "Installing mandatory dependencies"
 
-    if [ "$(uname -s)" == "Darwin" ]; then
-        echo "macOS detected. Setup for this system in-progress"
-        install_macos
-    elif [ -x "$(command -v apt-get)" ]; then
+    if [ -x "$(command -v apt-get)" ]; then
         echo "Debian/Ubuntu detected. Setup for this system in-progress"
         install_debian
     elif [ -x "$(command -v yum)" ]; then

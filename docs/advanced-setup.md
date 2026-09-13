@@ -52,71 +52,6 @@ freqtrade trade -c MyConfigUSDT.json -s MyCustomStrategy --db-url sqlite:///user
 
 For more information regarding usage of the sqlite databases, for example to manually enter or remove trades, please refer to the [SQL Cheatsheet](sql_cheatsheet.md).
 
-### Multiple instances using docker
-
-To run multiple instances of freqtrade using docker you will need to edit the docker-compose.yml file and add all the instances you want as separate services. Remember, you can separate your configuration into multiple files, so it's a good idea to think about making them modular, then if you need to edit something common to all bots, you can do that in a single config file. 
-``` yml
----
-version: '3'
-services:
-  freqtrade1:
-    image: freqtradeorg/freqtrade:stable
-    # image: freqtradeorg/freqtrade:develop
-    # Use plotting image
-    # image: freqtradeorg/freqtrade:develop_plot
-    # Build step - only needed when additional dependencies are needed
-    # build:
-    #   context: .
-    #   dockerfile: "./docker/Dockerfile.custom"
-    restart: always
-    container_name: freqtrade1
-    volumes:
-      - "./user_data:/freqtrade/user_data"
-    # Expose api on port 8080 (localhost only)
-    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-    # before enabling this.
-     ports:
-     - "127.0.0.1:8080:8080"
-    # Default command used when running `docker compose up`
-    command: >
-      trade
-      --logfile /freqtrade/user_data/logs/freqtrade1.log
-      --db-url sqlite:////freqtrade/user_data/tradesv3_freqtrade1.sqlite
-      --config /freqtrade/user_data/config.json
-      --config /freqtrade/user_data/config.freqtrade1.json
-      --strategy SampleStrategy
-  
-  freqtrade2:
-    image: freqtradeorg/freqtrade:stable
-    # image: freqtradeorg/freqtrade:develop
-    # Use plotting image
-    # image: freqtradeorg/freqtrade:develop_plot
-    # Build step - only needed when additional dependencies are needed
-    # build:
-    #   context: .
-    #   dockerfile: "./docker/Dockerfile.custom"
-    restart: always
-    container_name: freqtrade2
-    volumes:
-      - "./user_data:/freqtrade/user_data"
-    # Expose api on port 8080 (localhost only)
-    # Please read the https://www.freqtrade.io/en/stable/rest-api/ documentation
-    # before enabling this.
-    ports:
-      - "127.0.0.1:8081:8080"
-    # Default command used when running `docker compose up`
-    command: >
-      trade
-      --logfile /freqtrade/user_data/logs/freqtrade2.log
-      --db-url sqlite:////freqtrade/user_data/tradesv3_freqtrade2.sqlite
-      --config /freqtrade/user_data/config.json
-      --config /freqtrade/user_data/config.freqtrade2.json
-      --strategy SampleStrategy
-
-```
-
-You can use whatever naming convention you want, freqtrade1 and 2 are arbitrary. Note, that you will need to use different database files, port mappings and telegram configurations for each instance, as mentioned above. 
-
 ## Use a different database system
 
 Freqtrade is using SQLAlchemy, which supports multiple different database systems. As such, a multitude of database systems should be supported.
@@ -248,7 +183,7 @@ If this section is left out, freqtrade will provide no output (in the non-config
 
 ---
 
-On many Linux systems the bot can be configured to send its log messages to `syslog` or `journald` system services. Logging to a remote `syslog` server is also available on Windows. The special values for the `--logfile` command line option can be used for this.
+On many Linux systems the bot can be configured to send its log messages to `syslog` or `journald` system services. The special values for the `--logfile` command line option can be used for this.
 
 ### Logging to syslog
 
@@ -318,9 +253,9 @@ The syslog address can be either a Unix domain socket (socket filename) or a UDP
 So, the following are the examples of possible addresses:
 
 * `"address": "/dev/log"` -- log to syslog (rsyslog) using the `/dev/log` socket, suitable for most systems.
-* `"address": "/var/run/syslog"` -- log to syslog (rsyslog) using the `/var/run/syslog` socket. Use this on MacOS.
+* `"address": "/var/run/syslog"` -- log to syslog (rsyslog) using the `/var/run/syslog` socket.
 * `"address": "localhost:514"` -- log to local syslog using UDP socket, if it listens on port 514.
-* `"address": "<ip>:514"` -- log to remote syslog at IP address and port 514. This may be used on Windows for remote logging to an external syslog server.
+* `"address": "<ip>:514"` -- log to remote syslog at IP address and port 514.
 
 ??? Info "Deprecated - configure syslog via command line"
     `--logfile syslog:<syslog_address>` -- send log messages to `syslog` service using the `<syslog_address>` as the syslog address.
@@ -331,13 +266,13 @@ So, the following are the examples of possible addresses:
 
     * `--logfile syslog:/dev/log` -- log to syslog (rsyslog) using the `/dev/log` socket, suitable for most systems.
     * `--logfile syslog` -- same as above, the shortcut for `/dev/log`.
-    * `--logfile syslog:/var/run/syslog` -- log to syslog (rsyslog) using the `/var/run/syslog` socket. Use this on MacOS.
+    * `--logfile syslog:/var/run/syslog` -- log to syslog (rsyslog) using the `/var/run/syslog` socket.
     * `--logfile syslog:localhost:514` -- log to local syslog using UDP socket, if it listens on port 514.
-    * `--logfile syslog:<ip>:514` -- log to remote syslog at IP address and port 514. This may be used on Windows for remote logging to an external syslog server.
+    * `--logfile syslog:<ip>:514` -- log to remote syslog at IP address and port 514.
 
 ### Logging to journald
 
-This needs the `cysystemd` python package installed as dependency (`pip install cysystemd`), which is not available on Windows. Hence, the whole journald logging functionality is not available for a bot running on Windows.
+This needs the `cysystemd` python package installed as dependency (`pip install cysystemd`).
 
 To send Freqtrade log messages to `journald` system service, add the following configuration snippet to your configuration.
 

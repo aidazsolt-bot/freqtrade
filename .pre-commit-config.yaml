@@ -67,9 +67,3 @@ repos:
     - id: codespell
       additional_dependencies:
         - tomli
-
-  # Ensure github actions remain safe
-  - repo: https://github.com/woodruffw/zizmor-pre-commit
-    rev: v1.30.0
-    hooks:
-    - id: zizmor

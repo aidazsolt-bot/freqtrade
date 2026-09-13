@@ -132,7 +132,6 @@ Please check the following:
 * Are you using the correct strategy name? The strategy name is case-sensitive and must correspond to the Strategy class name (not the filename!).
 * Is the strategy in the `user_data/strategies` directory, and has the file-ending `.py`?
 * Does the bot show other warnings before this error? Maybe you're missing some dependencies for the strategy - which would be highlighted in the log.
-* In case of docker - is the strategy directory mounted correctly (check the volumes part of the docker-compose file)?
 
 ### I'm getting "Missing data fillup" messages in the log
 
@@ -229,11 +228,6 @@ or even on the fly, as the bot works and the log file grows:
 $ tail -f /path/to/mylogfile.log | grep 'something'
 ```
 from a separate terminal window.
-
-On Windows, the `--logfile` option is also supported by Freqtrade and you can use the `findstr` command to search the log for the string of interest:
-```
-> type \path\to\mylogfile.log | findstr "something"
-```
 
 ## Hyperopt module
 

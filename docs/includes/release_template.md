@@ -6,13 +6,6 @@
 
 As always, you can update your bot using one of the following commands:
 
-### docker-compose
-
-```bash
-docker-compose pull
-docker-compose up -d
-```
-
 ### Installation via setup script
 
 ``` bash

@@ -58,32 +58,6 @@ secrets.token_hex()
     Please make sure to select a very strong, unique password to protect your bot from unauthorized access.
     Also change `jwt_secret_key` to something random (no need to remember this, but it'll be used to encrypt your session, so it better be something unique!). This value should also be 32 characters or longer to be safe.
 
-### Configuration with docker
-
-If you run your bot using docker, you'll need to have the bot listen to incoming connections. The security is then handled by docker.
-
-``` json
-    "api_server": {
-        "enabled": true,
-        "listen_ip_address": "0.0.0.0",
-        "listen_port": 8080,
-        "username": "Freqtrader",
-        "password": "SuperSecret1!",
-        //...
-    },
-```
-
-Make sure that the following 2 lines are available in your docker-compose file:
-
-```yml
-    ports:
-      - "127.0.0.1:8080:8080"
-```
-
-!!! Danger "Security warning"
-    By using `"8080:8080"` (or `"0.0.0.0:8080:8080"`) in the docker port mapping, the API will be available to everyone connecting to the server under the correct port, so others may be able to control your bot.
-    This **may** be safe if you're running the bot in a secure environment (like your home network), but it's not recommended to expose the API to the internet.
-
 ## Rest API
 
 ### Consuming the API

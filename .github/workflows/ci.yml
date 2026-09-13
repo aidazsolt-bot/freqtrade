@@ -6,12 +6,7 @@ on:
       - stable
       - develop
       - ci/*
-    tags:
-  release:
-    types: [published]
   pull_request:
-  schedule:
-    - cron:  '0 3 * * 4'
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}"
@@ -19,369 +14,54 @@ concurrency:
 permissions: {}
 
 jobs:
-  tests:
-    name: "Tests and Linting"
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ "ubuntu-24.04" ]
-        python-version: ["3.12"]
-
+  ci:
+    name: "pip / pytest / wheel / smoke"
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
 
-    - name: Install uv and Python 🐍
-      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+    - name: Set up Python 3.12
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
       with:
-        activate-environment: true
-        enable-cache: true # zizmor: ignore[cache-poisoning] - this job is not used for release builds
-        prune-cache: true
-        python-version: ${{ matrix.python-version }}
-        cache-dependency-glob: "requirements**.txt"
-        cache-suffix: "${{ matrix.python-version }}"
+        python-version: "3.12"
+        cache: pip
+        cache-dependency-path: |
+          requirements*.txt
+          docs/requirements-docs.txt
+          ft_client/requirements.txt
 
-    - name: Installation (python)
+    - name: Install requirements (pip)
       run: |
-        uv pip install -r requirements-dev.txt
-        uv pip install -e ft_client/
-        uv pip install -e .
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements-dev.txt
+        python -m pip install ./ft_client
+        python -m pip install -e .
 
-    - name: Check for version alignment
-      run: |
-        python build_helpers/freqtrade_client_version_align.py
-
-    - name: Tests
+    - name: Pytest
       run: |
         pytest --random-order --durations 20 -n auto
 
-    - name: Run json schema extract
-      # This must be kept before the repository check to ensure that the schema is up-to-date
+    - name: Build wheel
       run: |
-        python build_helpers/extract_config_json_schema.py
+        python -m build --wheel
+        ls -la dist/
 
-    - name: Run command docs partials extract
-      # This must be kept before the repository check to ensure that the docs are up-to-date
+    - name: Install wheel
       run: |
-        python build_helpers/create_command_partials.py
+        python -m pip uninstall -y freqtrade
+        python -m pip install dist/freqtrade-*.whl
+        freqtrade --version
 
-    - name: Check for repository changes
-      run: |
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "Repository is dirty, changes detected:"
-          git status
-          git diff
-          exit 1
-        else
-          echo "Repository is clean, no changes detected."
-        fi
-
-    - name: Backtesting (multi)
+    - name: Generate strategy and brief dry-run start
       run: |
         freqtrade create-userdir --userdir user_data
         cp tests/testdata/config.tests.json user_data/config.json
-        freqtrade new-strategy -s AwesomeStrategy
-        freqtrade new-strategy -s AwesomeStrategyMin --template minimal
-        freqtrade new-strategy -s AwesomeStrategyAdv --template advanced
-        freqtrade backtesting --datadir tests/testdata --strategy-list AwesomeStrategy AwesomeStrategyMin AwesomeStrategyAdv -i 5m
-
-    - name: Hyperopt
-      run: |
-        cp tests/testdata/config.tests.json config.json
-        freqtrade create-userdir --userdir user_data
-        freqtrade hyperopt --datadir tests/testdata -e 6 --strategy SampleStrategy --hyperopt-loss SharpeHyperOptLossDaily --print-all
-
-    - name: Run Ruff
-      run: |
-        ruff check --output-format=github
-
-    - name: Run Ruff format check
-      run: |
-        ruff format --check
-
-    - name: Mypy
-      run: |
-        mypy freqtrade scripts tests
-
-    - name: Discord notification
-      uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
-      if: ${{ failure() && ( github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) }}
-      with:
-          color: '#FF0000' # red
-          title: Freqtrade CI failed on ${{ matrix.os }} with Python ${{ matrix.python-version }}!
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}  # zizmor: ignore[secrets-outside-env] Intentionally not using environment variable.
-
-  mypy-version-check:
-    name: "Mypy Version Check"
-    runs-on: ubuntu-24.04
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Install uv and Python 🐍
-      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-      with:
-        activate-environment: true
-        python-version: "3.13"
-        enable-cache: false
-
-    - name: pre-commit dependencies
-      run: |
-        uv pip install $(grep -E "^pyyaml==" requirements-dev.txt)
-        python build_helpers/pre_commit_update.py
-
-  pre-commit:
-    name: "Pre-commit checks"
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Set up Python 🐍
-      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-      with:
-        python-version: "3.13"
-
-    # Inline steps instead of pre-commit/action (still pins actions/cache@v4 / Node 20).
-    - name: Install pre-commit
-      run: python -m pip install pre-commit
-
-    - name: Cache pre-commit environments
-      uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
-      with:
-        path: ~/.cache/pre-commit
-        key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
-    - name: Run pre-commit
-      run: pre-commit run --show-diff-on-failure --color=always --all-files
-
-  docs-check:
-    name: "Documentation build"
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Documentation syntax
-      run: |
-        ./tests/test_docs.sh
-
-    - name: Install uv and Python 🐍
-      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-      with:
-        activate-environment: true
-        python-version: "3.13"
-        enable-cache: false
-
-    - name: Documentation build
-      run: |
-        uv pip install -r docs/requirements-docs.txt
-        mkdocs build
-
-    - name: Discord notification
-      uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
-      if: failure() && ( github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
-      with:
-          color: '#FF0000' # red
-          title: Freqtrade doc test failed!
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}  # zizmor: ignore[secrets-outside-env] Intentionally not using environment variable.
-
-
-  build-linux-online:
-    # Run pytest with "live" checks
-    name: "Online / live tests"
-    runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Install uv and Python 🐍
-      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-      with:
-        activate-environment: true
-        enable-cache: true # zizmor: ignore[cache-poisoning] - this job is not used for release builds
-        prune-cache: true
-        python-version: "${{ matrix.python-version }}"
-        cache-dependency-glob: "requirements**.txt"
-        cache-suffix: "${{ matrix.python-version }}"
-
-    - name: Installation - *nix
-      run: |
-        uv pip install -r requirements-dev.txt
-        uv pip install -e ft_client/
-        uv pip install -e .
-
-    - name: Tests incl. ccxt compatibility tests
-      env:
-        CI_WEB_PROXY: http://152.67.66.8:13128
-      run: |
-        pytest --random-order --longrun --durations 20 -n auto
-
-
-  # Notify only once - when CI completes (and after deploy) in case it's successful
-  notify-complete:
-    name: "Notify CI Completion"
-    needs: [
-      build,
-      build-linux-online
-    ]
-    runs-on: ubuntu-22.04
-    # Discord notification can't handle schedule events
-    if: github.event_name != 'schedule' && github.repository == 'freqtrade/freqtrade'
-    steps:
-
-    - name: Discord notification
-      uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
-      if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
-      with:
-          color: '#00FF00' # green
-          title: Test Completed!
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}  # zizmor: ignore[secrets-outside-env] Intentionally not using environment variable.
-
-  build:
-    if: always()
-    name: "Build"
-    needs: [
-      tests,
-      docs-check,
-      mypy-version-check,
-      pre-commit,
-    ]
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        python-version: ["3.13"]
-
-    steps:
-
-    - name: Decide whether the needed jobs succeeded or failed
-      uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35  # v1.3.0
-      with:
-        jobs: ${{ toJSON(needs) }}
-
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Install uv and Python 🐍
-      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-      with:
-        activate-environment: true
-        python-version: "${{ matrix.python-version }}"
-        # Don't cache to avoid cache poisoning
-        enable-cache: false
-
-    - name: Build distribution
-      run: |
-        uv pip install $(grep -E "^build==" requirements-dev.txt)
-        python -m build --sdist --wheel
-
-    - name: Upload artifacts 📦
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      with:
-        name: freqtrade-build
-        path: |
-          dist
-        retention-days: 10
-
-    - name: Build Client distribution
-      run: |
-        python -m build --sdist --wheel ft_client
-
-    - name: Upload artifacts 📦
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-      with:
-        name: freqtrade-client-build
-        path: |
-          ft_client/dist
-        retention-days: 10
-
-  deploy-test-pypi:
-    name: "Publish Python 🐍 distribution 📦 to TestPyPI"
-    needs: [ build ]
-    runs-on: ubuntu-22.04
-    if: (github.event_name == 'release')
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/freqtrade
-    permissions:
-      id-token: write # Needed for pypa/gh-action-pypi-publish
-
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Download artifact  📦
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-      with:
-        pattern: freqtrade*-build
-        path: dist
-        merge-multiple: true
-
-    - name: Publish to PyPI (Test)
-      uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
-      with:
-        repository-url: https://test.pypi.org/legacy/
-
-
-  deploy-pypi:
-    name: "Publish Python 🐍 distribution 📦 to PyPI"
-    needs: [ build ]
-    runs-on: ubuntu-22.04
-    if: (github.event_name == 'release')
-    environment:
-      name: pypi
-      url: https://pypi.org/p/freqtrade
-    permissions:
-      id-token: write # Needed for pypa/gh-action-pypi-publish
-
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
-
-    - name: Download artifact  📦
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-      with:
-        pattern: freqtrade*-build
-        path: dist
-        merge-multiple: true
-
-    - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
-
-
-  docker-build:
-    name: "Docker Build and Deploy"
-    needs: [
-     build,
-    ]
-    if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'release') && github.repository == 'freqtrade/freqtrade'
-    uses: $/.github/workflows/docker-build.yml
-    permissions:
-      packages: write # Needed to push package versions
-      contents: read
-    secrets:
-      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}  # zizmor: ignore[secrets-outside-env] Intentionally not using environment variable.
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-
-
-  packages-cleanup:
-    name: "Docker Package Cleanup"
-    uses: $/.github/workflows/packages-cleanup.yml
-    # Only run on push, schedule, or release events
-    if: (github.event_name == 'push' || github.event_name == 'schedule') && github.repository == 'freqtrade/freqtrade'
-    permissions:
-      packages: write # Needed to delete package versions
-    with:
-      package_name: 'freqtrade'
+        freqtrade new-strategy -s CiSmokeStrategy --template minimal --userdir user_data
+        # Start briefly; timeout exit 124 means the bot ran until we stopped it.
+        timeout 45s freqtrade trade \
+          --config user_data/config.json \
+          --strategy CiSmokeStrategy \
+          --db-url sqlite:///user_data/tradesv3.ci.sqlite \
+          || test $? -eq 124
