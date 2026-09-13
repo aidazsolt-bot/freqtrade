@@ -3204,7 +3204,20 @@
 </div>
 <details class="hint">
 <summary>Different template levels</summary>
-<p><code>freqtrade new-strategy</code> has an additional parameter, <code>--template</code>, which controls the amount of pre-build information you get in the created strategy. Use <code>--template minimal</code> to get an empty strategy without any indicator examples, or <code>--template advanced</code> to get a template with more complicated features defined.</p>
+<p><code>freqtrade new-strategy</code> has an additional parameter, <code>--template</code>, which controls the amount of pre-built information you get in the created strategy.</p>
+<p>Classic strategies:</p>
+<ul>
+<li><code>--template minimal</code> — empty strategy without indicator examples</li>
+<li><code>--template full</code> (default) — sample indicators and entry/exit logic</li>
+<li><code>--template advanced</code> — full template plus optional callback stubs</li>
+</ul>
+<p>FreqAI strategies:</p>
+<ul>
+<li><code>--template minimal-ai</code> — slim FreqAI skeleton (few features, long-only)</li>
+<li><code>--template full-ai</code> — richer feature set with long/short prediction entries</li>
+<li><code>--template advanced-ai</code> — full-ai plus extra callbacks (<code>confirm_trade_entry</code>, …)</li>
+</ul>
+<p>See also the <a href="../freqai/">FreqAI documentation</a>.</p>
 </details>
 <h3 id="anatomy-of-a-strategy">Anatomy of a strategy<a class="headerlink" href="#anatomy-of-a-strategy" title="Permanent link">&para;</a></h3>
 <p>A strategy file contains all the information needed to build the strategy logic:</p>

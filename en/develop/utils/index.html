@@ -2647,7 +2647,7 @@ The file will be named inline with your class name, and will not overwrite exist
 <p>Results will be located in <code>user_data/strategies/&lt;strategyclassname&gt;.py</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="go">usage: freqtrade new-strategy [-h] [--userdir PATH] [-s NAME]</span>
 <span class="go">                              [--strategy-path PATH]</span>
-<span class="go">                              [--template {full,minimal,advanced}]</span>
+<span class="go">                              [--template {full,minimal,advanced,minimal-ai,full-ai,advanced-ai}]</span>
 
 <span class="go">options:</span>
 <span class="go">  -h, --help            show this help message and exit</span>
@@ -2656,10 +2656,11 @@ The file will be named inline with your class name, and will not overwrite exist
 <span class="go">  -s, --strategy NAME   Specify strategy class name which will be used by the</span>
 <span class="go">                        bot.</span>
 <span class="go">  --strategy-path PATH  Specify additional strategy lookup path.</span>
-<span class="go">  --template {full,minimal,advanced}</span>
+<span class="go">  --template {full,minimal,advanced,minimal-ai,full-ai,advanced-ai}</span>
 <span class="go">                        Use a template which is either `minimal`, `full`</span>
-<span class="go">                        (containing multiple sample indicators) or `advanced`.</span>
-<span class="go">                        Default: `full`.</span>
+<span class="go">                        (containing multiple sample indicators), `advanced`,</span>
+<span class="go">                        or FreqAI variants `minimal-ai`, `full-ai`,</span>
+<span class="go">                        `advanced-ai`. Default: `full`.</span>
 </code></pre></div>
 <h3 id="sample-usage-of-new-strategy">Sample usage of new-strategy<a class="headerlink" href="#sample-usage-of-new-strategy" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>freqtrade<span class="w"> </span>new-strategy<span class="w"> </span>--strategy<span class="w"> </span>AwesomeStrategy
@@ -2670,6 +2671,10 @@ The file will be named inline with your class name, and will not overwrite exist
 <p>Using the advanced template (populates all optional functions and methods)</p>
 <div class="highlight"><pre><span></span><code>freqtrade<span class="w"> </span>new-strategy<span class="w"> </span>--strategy<span class="w"> </span>AwesomeStrategy<span class="w"> </span>--template<span class="w"> </span>advanced
 </code></pre></div>
+<p>FreqAI strategy templates (<code>minimal-ai</code>, <code>full-ai</code>, <code>advanced-ai</code>)</p>
+<div class="highlight"><pre><span></span><code>freqtrade<span class="w"> </span>new-strategy<span class="w"> </span>--strategy<span class="w"> </span>MyFreqAIStrategy<span class="w"> </span>--template<span class="w"> </span>minimal-ai
+</code></pre></div>
+<p>Use a FreqAI-enabled config (for example <code>config_examples/config_freqai.example.json</code>) and a prediction model such as <code>--freqaimodel LightGBMRegressor</code> when running the generated strategy.</p>
 <h2 id="list-strategies">List Strategies<a class="headerlink" href="#list-strategies" title="Permanent link">&para;</a></h2>
 <p>Use the <code>list-strategies</code> subcommand to see all strategies in one particular directory.</p>
 <p>This subcommand is useful for finding problems in your environment with loading strategies: modules with strategies that contain errors and failed to load are printed in red (LOAD FAILED), while strategies with duplicate names are printed in yellow (DUPLICATE NAME).</p>
