@@ -308,33 +308,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker_quickstart/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quickstart with Docker
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
   
@@ -586,10 +559,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -607,8 +580,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_12">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -833,10 +806,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
         
           
-          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
             
   
   
@@ -854,8 +827,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_16">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1191,10 +1164,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
         
           
-          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
             
   
   
@@ -1212,8 +1185,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_21">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_20">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1329,10 +1302,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_22" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" >
         
           
-          <label class="md-nav__link" for="__nav_22" id="__nav_22_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
             
   
   
@@ -1350,8 +1323,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_22_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_22">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_21">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2736,7 +2709,6 @@ The output of this command will also include a status column, showing if the str
 <li>Are you using the correct strategy name? The strategy name is case-sensitive and must correspond to the Strategy class name (not the filename!).</li>
 <li>Is the strategy in the <code>user_data/strategies</code> directory, and has the file-ending <code>.py</code>?</li>
 <li>Does the bot show other warnings before this error? Maybe you're missing some dependencies for the strategy - which would be highlighted in the log.</li>
-<li>In case of docker - is the strategy directory mounted correctly (check the volumes part of the docker-compose file)?</li>
 </ul>
 <h3 id="im-getting-missing-data-fillup-messages-in-the-log">I'm getting "Missing data fillup" messages in the log<a class="headerlink" href="#im-getting-missing-data-fillup-messages-in-the-log" title="Permanent link">&para;</a></h3>
 <p>This message is just a warning that the latest candles had missing candles in them.
@@ -2808,9 +2780,6 @@ or even on the fly, as the bot works and the log file grows:
 </code></pre></div>
 from a separate terminal window.</li>
 </ul>
-<p>On Windows, the <code>--logfile</code> option is also supported by Freqtrade and you can use the <code>findstr</code> command to search the log for the string of interest:
-<div class="highlight"><pre><span></span><code>&gt; type \path\to\mylogfile.log | findstr "something"
-</code></pre></div></p>
 <h2 id="hyperopt-module">Hyperopt module<a class="headerlink" href="#hyperopt-module" title="Permanent link">&para;</a></h2>
 <h3 id="why-does-freqtrade-not-have-gpu-support">Why does freqtrade not have GPU support?<a class="headerlink" href="#why-does-freqtrade-not-have-gpu-support" title="Permanent link">&para;</a></h3>
 <p>First of all, most indicator libraries don't have GPU support - as such, there would be little benefit for indicator calculations.

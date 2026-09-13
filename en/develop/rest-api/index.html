@@ -308,33 +308,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker_quickstart/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quickstart with Docker
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../installation/" class="md-nav__link">
         
   
@@ -588,10 +561,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -609,8 +582,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_12">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -770,17 +743,6 @@
     <span class="md-ellipsis">
       
         Security
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-with-docker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration with docker
       
     </span>
   </a>
@@ -1071,10 +1033,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
         
           
-          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
             
   
   
@@ -1092,8 +1054,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_16">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1429,10 +1391,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_20" >
         
           
-          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="0">
             
   
   
@@ -1450,8 +1412,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_21">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_20">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1567,10 +1529,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_22" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_21" >
         
           
-          <label class="md-nav__link" for="__nav_22" id="__nav_22_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="0">
             
   
   
@@ -1588,8 +1550,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_22_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_22">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_21">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2055,17 +2017,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#configuration-with-docker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration with docker
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2282,26 +2233,6 @@ This should return the response:</p>
 <p class="admonition-title">Password selection</p>
 <p>Please make sure to select a very strong, unique password to protect your bot from unauthorized access.
 Also change <code>jwt_secret_key</code> to something random (no need to remember this, but it'll be used to encrypt your session, so it better be something unique!). This value should also be 32 characters or longer to be safe.</p>
-</div>
-<h3 id="configuration-with-docker">Configuration with docker<a class="headerlink" href="#configuration-with-docker" title="Permanent link">&para;</a></h3>
-<p>If you run your bot using docker, you'll need to have the bot listen to incoming connections. The security is then handled by docker.</p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">"api_server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">"listen_ip_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">"listen_port"</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Freqtrader"</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SuperSecret1!"</span><span class="p">,</span>
-<span class="w">        </span><span class="c1">//...</span>
-<span class="w">    </span><span class="p">},</span>
-</code></pre></div>
-<p>Make sure that the following 2 lines are available in your docker-compose file:</p>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"127.0.0.1:8080:8080"</span>
-</code></pre></div>
-<div class="admonition danger">
-<p class="admonition-title">Security warning</p>
-<p>By using <code>"8080:8080"</code> (or <code>"0.0.0.0:8080:8080"</code>) in the docker port mapping, the API will be available to everyone connecting to the server under the correct port, so others may be able to control your bot.
-This <strong>may</strong> be safe if you're running the bot in a secure environment (like your home network), but it's not recommended to expose the API to the internet.</p>
 </div>
 <h2 id="rest-api_1">Rest API<a class="headerlink" href="#rest-api_1" title="Permanent link">&para;</a></h2>
 <h3 id="consuming-the-api">Consuming the API<a class="headerlink" href="#consuming-the-api" title="Permanent link">&para;</a></h3>
