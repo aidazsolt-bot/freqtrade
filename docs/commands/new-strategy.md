@@ -13,7 +13,7 @@ options:
   --template {full,minimal,advanced,minimal-ai,full-ai,advanced-ai}
                         Use a template which is either `minimal`, `full`
                         (containing multiple sample indicators), `advanced`,
-                        or FreqAI variants `minimal-ai`, `full-ai`,
-                        `advanced-ai`. Default: `full`.
+                        or FreqAI variants `minimal-ai`, `full-ai`, `advanced-
+                        ai`. Default: `full`.
 
 ```
