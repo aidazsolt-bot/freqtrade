@@ -197,10 +197,9 @@ class BaseReinforcementLearningModel(IFreqaiModel):
             "pair": pair,
             "df_raw": self.df_raw,
         }
-        if self.data_provider:
-            env_info["fee"] = self.data_provider._exchange.get_fee(  # type: ignore
-                symbol=self.data_provider.current_whitelist()[0]
-            )
+        if self.data_provider and self.data_provider._exchange is not None:
+            # Fee for the pair under training — do not require PairListManager.
+            env_info["fee"] = self.data_provider._exchange.get_fee(symbol=pair)
 
         return env_info
 
